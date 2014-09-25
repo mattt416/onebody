@@ -26,11 +26,13 @@ describe Updater do
         name:           'Tim Morgan',
         last_name:      'Morgan',
         home_phone:     '4567890123',
-        address1:       '123 S Something st.',
-        address2:       '',
-        city:           'City',
-        state:          'OK',
-        zip:            '00000',
+        location_attributes: {
+          address1:       '123 S Something st.',
+          address2:       '',
+          city:           'City',
+          state:          'OK',
+          zip:            '00000',
+        }
       }
     )
   end

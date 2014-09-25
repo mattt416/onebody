@@ -45,6 +45,9 @@ class Person < ActiveRecord::Base
   has_many :generated_files
   has_many :tasks
   has_one :stream_item, as: :streamable
+  # NOTE(mattt): this doesn't seem intuitive -- you would think we would have
+  #              to specify a belongs_to here
+  has_one :location, through: :family
   belongs_to :site
 
   scope_by_site_id
@@ -188,7 +191,8 @@ class Person < ActiveRecord::Base
     birthday and ((birthday.yday()+365 - today.yday()).modulo(365) < BIRTHDAY_SOON_DAYS)
   end
 
-  delegate             :home_phone, :address, :address1, :address2, :city, :state, :zip, :short_zip, :mapable?, to: :family, allow_nil: true
+  delegate             :home_phone, to: :family, allow_nil: true
+  delegate             :address, :address1, :address1=, :address2, :address2=, :city, :city=, :state, :state=, :zip, :zip=, :short_zip, :country, :country=, :mapable?, :latitude, :latitude=, :longitude, :longitude=, to: :location, allow_nil: true
   sharable_attributes  :home_phone, :mobile_phone, :work_phone, :fax, :email, :birthday, :address, :anniversary, :activity
 
   self.skip_time_zone_conversion_for_attributes = [:birthday, :anniversary]

@@ -7,6 +7,8 @@ class Family < ActiveRecord::Base
   has_many :people, -> { order(:position) }, dependent: :destroy
   has_many :updates, -> { order(:created_at) }
   accepts_nested_attributes_for :people
+  belongs_to :location
+  accepts_nested_attributes_for :location
   belongs_to :site
 
   scope_by_site_id
@@ -41,13 +43,16 @@ class Family < ActiveRecord::Base
     end
   end
 
+  delegate :address, :address1, :address1=, :address2, :address2=, :city, :city=, :state, :state=, :zip, :zip=, :short_zip, :country, :country=, :mapable?, :latitude, :latitude=, :longitude, :longitude=, to: :location, allow_nil: true
+
   def initialize(*args)
     super
     self.country = Setting.get(:system, :default_country) unless country.present?
   end
 
-  geocoded_by :location
-  after_validation :geocode
+  # NOTE(mattt): moved to location
+  #geocoded_by :location
+  #after_validation :geocode
 
   def barcode_id=(b)
     write_attribute(:barcode_id, b.to_s.strip.any? ? b : nil)
@@ -59,25 +64,28 @@ class Family < ActiveRecord::Base
     write_attribute(:barcode_assigned_at, Time.now.utc)
   end
 
+  # NOTE(mattt): moved to location
   def address
     address1.to_s + (address2.present? ? "\n#{address2}" : '')
   end
 
-  def mapable?
-    latitude.to_f != 0.0 and longitude.to_f != 0.0
-  end
+  # NOTE(mattt): moved to location
+  #def mapable?
+  #  latitude.to_f != 0.0 and longitude.to_f != 0.0
+  #end
 
-  def location
-    if [address1, city, state].all?(&:present?)
-      {
-        street: address,
-        city: city,
-        state: state,
-        postalCode: zip,
-        adminArea1: country
-      }
-    end
-  end
+  # NOTE(mattt): moved to location
+  #def location
+  #  if [address1, city, state].all?(&:present?)
+  #    {
+  #      street: address,
+  #      city: city,
+  #      state: state,
+  #      postalCode: zip,
+  #      adminArea1: country
+  #    }
+  #  end
+  #end
 
   # not HTML-escaped!
   def pretty_address
@@ -91,9 +99,10 @@ class Family < ActiveRecord::Base
     return a
   end
 
-  def short_zip
-    zip.to_s.split('-').first
-  end
+  # NOTE(mattt): moved to location
+  #def short_zip
+  #  zip.to_s.split('-').first
+  #end
 
   self.digits_only_for_attributes = [:home_phone]
 

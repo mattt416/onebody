@@ -66,12 +66,6 @@ class Updater
       name:                 :approve,
       last_name:            :approve,
       home_phone:           :approve,
-      address1:             :approve,
-      address2:             :approve,
-      city:                 :approve,
-      state:                :approve,
-      zip:                  :approve,
-      country:              :approve,
       share_:               :immediate,
       visible:              :immediate,
       photo:                :immediate,
@@ -79,6 +73,15 @@ class Updater
       legacy_id:            :admin,
       barcode_id:           :admin,
       alternate_barcode_id: :admin,
+      location_attributes: {
+        id:                   :approve,
+        address1:             :approve,
+        address2:             :approve,
+        city:                 :approve,
+        state:                :approve,
+        zip:                  :approve,
+        country:              :approve,
+      }
     }
   }
 
